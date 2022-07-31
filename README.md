@@ -32,6 +32,5 @@ The different part or module of this project is as follows:
 - Employee Dashboard
 - Authentication and authorization(user verification)
 - Database(MongoDB)
-- Mobile-Friendly UI
 
 -------------
