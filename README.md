@@ -1,7 +1,7 @@
 -------------
 -------------
 
-# HRM
+# HRM (Human Resource Management system)
 Human Resource Management system is a web application that enables users to create, store and manage Employee Records
 
 -------------
@@ -15,7 +15,6 @@ This web application contains three account access:
 All three accounts contain different privileges and authentication.
 
 -------------
--------------
 
 Technology used :
 - REACT JS
@@ -24,7 +23,7 @@ Technology used :
 - MONGO DB
 
 -------------
--------------
+
 
 The different part or module of this project is as follows:
 - Login Page
