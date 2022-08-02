@@ -28,7 +28,7 @@ exports.addEmployee = (req, res) => {
     let newEmployee;
 
     newEmployee = {
-        
+
         Email: req.body.Email,
         Password: req.body.Password,
         role: req.body.RoleID,
@@ -93,15 +93,15 @@ exports.updateEmployee = (req, res) => {
 
 };
 exports.deleteEmployee = (req, res) => {
-    // Employee.findByIdAndRemove({ _id: req.params.id }, function (err, employee) {
-    //   if (!err) {
-    //     console.log(" state deleted");
-    //     res.send(employee);
-    //   } else {
-    //     console.log(err);
-    //     res.send("error");
-    //   }
-    // });
+    Employee.findByIdAndRemove({ _id: req.params.id }, function (err, employee) {
+      if (!err) {
+        console.log(" state deleted");
+        res.send(employee);
+      } else {
+        console.log(err);
+        res.send("error");
+      }
+    });
     res.send("error");
     console.log("delete");
     console.log(req.params.id);
