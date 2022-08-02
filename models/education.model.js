@@ -6,10 +6,24 @@ const educationSchema = new mongoose.Schema({
     Grade: { type: String, required: true },
     PassingOfYear: { type: String, required: true }
   });
-  educationSchema.plugin(autoIncrement.plugin, {
-    model: "Education",
-    field: "EducationID"
-  });
+  
+  // educationSchema.plugin(autoIncrement.plugin, {
+  //   model: "Education",
+  //   field: "EducationID"
+  // });
+
+  var entitySchema = mongoose.Schema({
+    EducationID: {type: String}
+});
+
+entitySchema.pre('save', function(next) {
+    var doc = this;
+    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
+        if(error) return next(error);
+        doc.EducationID = counter.seq;
+        next();
+    });
+});
   
   const Education = mongoose.model("Education", educationSchema);
 

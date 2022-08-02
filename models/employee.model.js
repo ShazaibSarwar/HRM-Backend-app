@@ -29,11 +29,26 @@ const employeeSchema = new mongoose.Schema({
     PANcardNo: { type: String },
     PermanetAddress: { type: String },
     PresentAddress: { type: String }
+}, {
+    usePushEach: true
+  });
+
+// employeeSchema.plugin(autoIncrement.plugin, {
+//     model: "Employee",
+//     field: "EmployeeID"
+// });
+
+var entitySchema = mongoose.Schema({
+    EmployeeID: {type: String}
 });
 
-employeeSchema.plugin(autoIncrement.plugin, {
-    model: "Employee",
-    field: "EmployeeID"
+entitySchema.pre('save', function(next) {
+    var doc = this;
+    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
+        if(error) return next(error);
+        doc.EmployeeID = counter.seq;
+        next();
+    });
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);

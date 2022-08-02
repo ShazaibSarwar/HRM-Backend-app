@@ -1,11 +1,10 @@
-const router = require('express').Router();
-const Joi = require('joi')
+
 const Employee = require('../../models/employee.model')
 const WorkExperience = require('../../models/workExperience.model')
-const verifyHREmployee = require('../../middlewares/verifyHrEmployee.middleware')
 
 
-router.get("/api/work-experience/:id", verifyHREmployee, (req, res) => {
+
+exports.getWorkExperience = (req, res) => {
     console.log(req.params.id);
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
@@ -27,59 +26,14 @@ router.get("/api/work-experience/:id", verifyHREmployee, (req, res) => {
         .exec(function (err, employee) {
             res.send(employee);
         });
-});
-router.post("/api/work-experience/:id", verifyEmployee, (req, res) => {
-    Joi.validate(req.body, WorkExperienceValidation, (err, result) => {
+};
+exports.addWorkExperience = (req, res) => {
+
+
+    Employee.findById(req.params.id, function (err, employee) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
-        } else {
-            Employee.findById(req.params.id, function (err, employee) {
-                if (err) {
-                    console.log(err);
-                    res.send("err");
-                } else {
-                    let newWorkExperience;
-
-                    newWorkExperience = {
-                        CompanyName: req.body.CompanyName,
-                        Designation: req.body.Designation,
-                        FromDate: req.body.FromDate,
-                        ToDate: req.body.ToDate
-                    };
-
-                    WorkExperience.create(newWorkExperience, function (
-                        err,
-                        workExperience
-                    ) {
-                        if (err) {
-                            console.log(err);
-                            res.send("error");
-                        } else {
-                            employee.workExperience.push(workExperience);
-                            employee.save(function (err, data) {
-                                if (err) {
-                                    console.log(err);
-                                    res.send("err");
-                                } else {
-                                    console.log(data);
-                                    res.send(workExperience);
-                                }
-                            });
-                            console.log("new WorkExperience Saved");
-                        }
-                    });
-                    console.log(req.body);
-                }
-            });
-        }
-    });
-});
-router.put("/api/work-experience/:id", verifyEmployee, (req, res) => {
-    Joi.validate(req.body, WorkExperienceValidation, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("err");
         } else {
             let newWorkExperience;
 
@@ -90,23 +44,59 @@ router.put("/api/work-experience/:id", verifyEmployee, (req, res) => {
                 ToDate: req.body.ToDate
             };
 
-            WorkExperience.findByIdAndUpdate(
-                req.params.id,
-                newWorkExperience,
-                function (err, workExperience) {
-                    if (err) {
-                        res.send("error");
-                    } else {
-                        res.send(newWorkExperience);
-                    }
+            WorkExperience.create(newWorkExperience, function (err, workExperience) {
+                if (err) {
+                    console.log(err);
+                    res.send("error");
+                } else {
+                    employee.workExperience.push(workExperience);
+                    employee.save(function (err, data) {
+                        if (err) {
+                            console.log(err);
+                            res.send("err");
+                        } else {
+                            console.log(data);
+                            res.send(workExperience);
+                        }
+                    });
+                    console.log("new WorkExperience Saved");
                 }
-            );
+            });
+            console.log(req.body);
         }
-        console.log("put");
-        console.log(req.body);
     });
-});
-router.delete("/api/Work-experience/:id/:id2", verifyEmployee, (req, res) => {
+
+
+};
+exports.updateWorkExperience = (req, res) => {
+
+
+    let newWorkExperience;
+
+    newWorkExperience = {
+        CompanyName: req.body.CompanyName,
+        Designation: req.body.Designation,
+        FromDate: req.body.FromDate,
+        ToDate: req.body.ToDate
+    };
+
+    WorkExperience.findByIdAndUpdate(
+        req.params.id,
+        newWorkExperience,
+        function (err, workExperience) {
+            if (err) {
+                res.send("error");
+            } else {
+                res.send(newWorkExperience);
+            }
+        }
+    );
+
+    console.log("put");
+    console.log(req.body);
+
+};
+exports.deleteEorkExperience = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
             res.send("error");
@@ -135,6 +125,5 @@ router.delete("/api/Work-experience/:id/:id2", verifyEmployee, (req, res) => {
             console.log(req.params.id);
         }
     });
-});
+};
 
-module.exports = router;

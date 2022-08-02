@@ -5,23 +5,16 @@ module.exports = (req, res, next) => {
     console.log(req.headers["authorization"]);
     const Header = req.headers["authorization"];
 
-    if (typeof Header !== "undefined") {
-        // decodedData = jwt.decode(req.headers['authorization']);
-        // if(decodedData.Account)
-        jwt.verify(Header, jwtKey, (err, authData) => {
-            if (err) {
-                res.sendStatus(403);
-            } else {
-                console.log(authData);
-                if (authData.Account == 1 || authData.Account == 2) {
-                    next();
-                } else {
-                    res.sendStatus(403);
-                }
-            }
-        });
-    } else {
-        // Forbidden
-        res.sendStatus(403);
-    }
+    if (typeof Header === "undefined") return res.sendStatus(403);  // Forbidden
+
+    jwt.verify(Header, jwtKey, (err, authData) => {
+        if (err) return res.sendStatus(403); // Forbidden
+        console.log(authData);
+        if (authData.Account == 1 || authData.Account == 2) {
+            next();
+        } else {
+            res.sendStatus(403);
+        }
+    });
+
 }

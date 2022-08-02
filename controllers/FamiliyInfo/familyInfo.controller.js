@@ -1,11 +1,8 @@
-const router = require('express').Router();
-const Joi = require('joi')
 const Employee = require('../../models/employee.model')
 const FamilyInfo = require('../../models/familyInfo.model')
-const verifyHREmployee = require('../../middlewares/verifyHrEmployee.middleware')
-const FamilyInfoValidation = require('../../controllers/FamiliyInfo/familyinfo.validator')
 
-router.get("/api/family-info/:id", verifyHREmployee, (req, res) => {
+
+exports.getInfo = (req, res) => {
     console.log(req.params.id);
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
@@ -28,56 +25,13 @@ router.get("/api/family-info/:id", verifyHREmployee, (req, res) => {
             // console.log(filteredCompany);
             res.send(employee);
         });
-});
-router.post("/api/family-info/:id", verifyEmployee, (req, res) => {
-    Joi.validate(req.body, FamilyInfoValidation, (err, result) => {
+};
+exports.addInfo = (req, res) => {
+
+    Employee.findById(req.params.id, function (err, employee) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
-        } else {
-            Employee.findById(req.params.id, function (err, employee) {
-                if (err) {
-                    console.log(err);
-                    res.send("err");
-                } else {
-                    let newFamilyInfo;
-
-                    newFamilyInfo = {
-                        Name: req.body.Name,
-                        Relationship: req.body.Relationship,
-                        DOB: req.body.DOB,
-                        Occupation: req.body.Occupation
-                    };
-
-                    FamilyInfo.create(newFamilyInfo, function (err, familyInfo) {
-                        if (err) {
-                            console.log(err);
-                            res.send("error");
-                        } else {
-                            employee.familyInfo.push(familyInfo);
-                            employee.save(function (err, data) {
-                                if (err) {
-                                    console.log(err);
-                                    res.send("err");
-                                } else {
-                                    console.log(data);
-                                    res.send(familyInfo);
-                                }
-                            });
-                            console.log("new familyInfo Saved");
-                        }
-                    });
-                    console.log(req.body);
-                }
-            });
-        }
-    });
-});
-router.put("/api/family-info/:id", verifyEmployee, (req, res) => {
-    Joi.validate(req.body, FamilyInfoValidation, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("err");
         } else {
             let newFamilyInfo;
 
@@ -88,22 +42,53 @@ router.put("/api/family-info/:id", verifyEmployee, (req, res) => {
                 Occupation: req.body.Occupation
             };
 
-            FamilyInfo.findByIdAndUpdate(req.params.id, newFamilyInfo, function (
-                err,
-                familyInfo
-            ) {
+            FamilyInfo.create(newFamilyInfo, function (err, familyInfo) {
                 if (err) {
+                    console.log(err);
                     res.send("error");
                 } else {
-                    res.send(newFamilyInfo);
+                    employee.familyInfo.push(familyInfo);
+                    employee.save(function (err, data) {
+                        if (err) {
+                            console.log(err);
+                            res.send("err");
+                        } else {
+                            console.log(data);
+                            res.send(familyInfo);
+                        }
+                    });
+                    console.log("new familyInfo Saved");
                 }
             });
+            console.log(req.body);
         }
-        console.log("put");
-        console.log(req.body);
     });
-});
-router.delete("/api/family-info/:id/:id2", verifyEmployee, (req, res) => {
+
+};
+exports.updateInfo = (req, res) => {
+
+    let newFamilyInfo;
+
+    newFamilyInfo = {
+        Name: req.body.Name,
+        Relationship: req.body.Relationship,
+        DOB: req.body.DOB,
+        Occupation: req.body.Occupation
+    };
+
+    FamilyInfo.findByIdAndUpdate(req.params.id, newFamilyInfo, function (
+        err,
+        familyInfo
+    ) {
+        if (err) {
+            res.send("error");
+        } else {
+            res.send(newFamilyInfo);
+        }
+    });
+
+};
+exports.deleteInfo = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
             res.send("error");
@@ -132,7 +117,6 @@ router.delete("/api/family-info/:id/:id2", verifyEmployee, (req, res) => {
             console.log(req.params.id);
         }
     });
-});
+};
 
 
-module.exports = router;

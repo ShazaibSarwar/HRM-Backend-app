@@ -1,48 +1,38 @@
-const router = require('express').Router();
-const Joi = require('joi')
 const Position = require('../../models/position.model')
-const PositionValidation = require('../../controllers/Position/position.validator')
-const verifyAdminHR = require('../../middlewares/verifyAdmin.middleware')
+const Employee = require('../../models/employee.model')
 
-router.get("/api/position", verifyAdminHR, (req, res) => {
+// const verifyAdminHR = require('../../middlewares/verifyAdmin.middleware')
+
+exports.getPositions = (req, res) => {
     Position.find()
         .populate("company")
         .exec(function (err, role) {
             res.send(role);
         });
-});
-router.post("/api/position", verifyAdminHR, (req, res) => {
-    Joi.validate(req.body, PositionValidation, (err, result) => {
+};
+exports.addPosition = (req, res) => {
+
+    let newPosition;
+    newPosition = {
+        PositionName: req.body.PositionName,
+        company: req.body.CompanyID
+    };
+
+    Position.create(newPosition, function (err, position) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("error");
         } else {
-            let newPosition;
-
-            newPosition = {
-                PositionName: req.body.PositionName,
-                company: req.body.CompanyID
-            };
-
-            Position.create(newPosition, function (err, position) {
-                if (err) {
-                    console.log(err);
-                    res.send("error");
-                } else {
-                    res.send(position);
-                    console.log("new Role Saved");
-                }
-            });
+            res.send(position);
+            console.log("new Role Saved");
         }
-        console.log(req.body);
     });
-});
-router.put("/api/position/:id", verifyAdminHR, (req, res) => {
-    Joi.validate(req.body, PositionValidation, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send(err.details[0].message);
-        } else {
+
+    console.log(req.body);
+
+};
+exports.updatePosition = (req, res) => {
+
             let updatePosition;
 
             updatePosition = {
@@ -60,13 +50,9 @@ router.put("/api/position/:id", verifyAdminHR, (req, res) => {
                     res.send(updatePosition);
                 }
             });
-        }
-
-        console.log("put");
-        console.log(req.body);
-    });
-});
-router.delete("/api/position/:id", verifyAdminHR, (req, res) => {
+    
+};
+exports.deletePosition = (req, res) => {
     Employee.find({ position: req.params.id }, function (err, p) {
         if (err) {
             console.log(err);
@@ -98,6 +84,5 @@ router.delete("/api/position/:id", verifyAdminHR, (req, res) => {
             }
         }
     });
-});
+};
 
-module.exports = router;

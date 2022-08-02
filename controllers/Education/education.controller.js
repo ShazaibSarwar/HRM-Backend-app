@@ -1,12 +1,9 @@
-const Joi = require('joi')
-const router = require('express').Router();
 const Employee = require('../../models/employee.model')
 const Education = require('../../models/education.model')
-const verifyHREmployee = require('../../middlewares/verifyHrEmployee.middleware')
-const EducationValidation = require('../../controllers/Education/education.validator')
 
 
-router.get("/api/education/:id", verifyHREmployee, (req, res) => {
+
+exports.getEducation = (req, res) => {
     console.log(req.params.id);
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
@@ -29,52 +26,48 @@ router.get("/api/education/:id", verifyHREmployee, (req, res) => {
             // console.log(filteredCompany);
             res.send(employee);
         });
-});
-router.post("/api/education/:id", verifyEmployee, (req, res) => {
-    Joi.validate(req.body, EducationValidation, (err, result) => {
+};
+exports.addEducation = (req, res) => {
+
+    Employee.findById(req.params.id, function (err, employee) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("error");
         } else {
-            Employee.findById(req.params.id, function (err, employee) {
+            let newEducation;
+
+            newEducation = {
+                SchoolUniversity: req.body.SchoolUniversity,
+                Degree: req.body.Degree,
+                Grade: req.body.Grade,
+                PassingOfYear: req.body.PassingOfYear
+            };
+
+            Education.create(newEducation, function (err, education) {
                 if (err) {
                     console.log(err);
-                    res.send("err");
+                    res.send("error");
                 } else {
-                    let newEducation;
-
-                    newEducation = {
-                        SchoolUniversity: req.body.SchoolUniversity,
-                        Degree: req.body.Degree,
-                        Grade: req.body.Grade,
-                        PassingOfYear: req.body.PassingOfYear
-                    };
-
-                    Education.create(newEducation, function (err, education) {
+                    employee.education.push(education);
+                    employee.save(function (err, data) {
                         if (err) {
                             console.log(err);
-                            res.send("error");
+                            res.send("err");
                         } else {
-                            employee.education.push(education);
-                            employee.save(function (err, data) {
-                                if (err) {
-                                    console.log(err);
-                                    res.send("err");
-                                } else {
-                                    console.log(data);
-                                    res.send(education);
-                                }
-                            });
-                            console.log("new Education Saved");
+                            console.log(data);
+                            res.send(education);
                         }
                     });
-                    console.log(req.body);
+                    console.log("new Education Saved");
                 }
             });
+            console.log(req.body);
         }
     });
-});
-router.put("/api/education/:id", verifyEmployee, (req, res) => {
+
+
+};
+exports.updateEducation = (req, res) => {
     Joi.validate(req.body, EducationValidation, (err, result) => {
         if (err) {
             console.log(err);
@@ -100,8 +93,8 @@ router.put("/api/education/:id", verifyEmployee, (req, res) => {
         console.log("put");
         console.log(req.body);
     });
-});
-router.delete("/api/education/:id/:id2", verifyEmployee, (req, res) => {
+};
+exports.deleteEducation = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
             res.send("error");
@@ -127,7 +120,6 @@ router.delete("/api/education/:id/:id2", verifyEmployee, (req, res) => {
             console.log(req.params.id);
         }
     });
-});
+};
 
 
-module.exports = router

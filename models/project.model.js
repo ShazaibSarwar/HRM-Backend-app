@@ -21,10 +21,23 @@ const projectSchema = new mongoose.Schema({
     /////////////****************** */
     portals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Portal" }]
   });
-  projectSchema.plugin(autoIncrement.plugin, {
-    model: "Project",
-    field: "ID"
-  });
+  // projectSchema.plugin(autoIncrement.plugin, {
+  //   model: "Project",
+  //   field: "ID"
+  // });
+
+  var entitySchema = mongoose.Schema({
+    ID: {type: String}
+});
+
+entitySchema.pre('save', function(next) {
+    var doc = this;
+    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
+        if(error) return next(error);
+        doc.ID = counter.seq;
+        next();
+    });
+});
   
 const Project = mongoose.model("Project", projectSchema);
 module.exports = Project

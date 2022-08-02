@@ -1,10 +1,8 @@
-const router = require('express').Router();
-const Joi = require('joi')
-const Portal = require('../../models/portal.model')
-const PortalValidation = require('../../controllers/Portal/portal.validator')
-const verifyAdmin = require('../../middlewares/verifyAdmin.middleware')
 
-router.get("/api/admin/portal", verifyAdmin, (req, res) => {
+const Portal = require('../../models/portal.model')
+// const verifyAdmin = require('../../middlewares/verifyAdmin.middleware')
+
+exports.getPortals = (req, res) => {
     Portal.find()
         .populate({ path: "projects" })
         .exec(function (err, portalData) {
@@ -14,60 +12,51 @@ router.get("/api/admin/portal", verifyAdmin, (req, res) => {
             }
             res.send(portalData);
         });
-});
-router.post("/api/admin/portal", verifyAdmin, (req, res) => {
-    Joi.validate(req.body, PortalValidation, (err, result) => {
+};
+exports.addPortal = (req, res) => {
+
+    let newPortal;
+    newPortal = {
+        PortalName: req.body.PortalName,
+        Status: req.body.Status
+    };
+
+    Portal.create(newPortal, function (err, portalData) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("error");
         } else {
-            let newPortal;
-            newPortal = {
-                PortalName: req.body.PortalName,
-                Status: req.body.Status
-            };
-
-            Portal.create(newPortal, function (err, portalData) {
-                if (err) {
-                    console.log(err);
-                    res.send("error");
-                } else {
-                    res.send(portalData);
-                    console.log("new Portal Saved");
-                }
-            });
-            console.log(req.body);
+            res.send(portalData);
+            console.log("new Portal Saved");
         }
     });
-});
-router.put("/api/admin/portal/:id", verifyAdmin, (req, res) => {
-    Joi.validate(req.body, PortalValidation, (err, result) => {
+    console.log(req.body);
+
+};
+exports.updatePortal = (req, res) => {
+
+    let updatePortal;
+    updatePortal = {
+        PortalName: req.body.PortalName,
+        Status: req.body.Status
+    };
+    Portal.findByIdAndUpdate(req.body._id, updatePortal, function (
+        err,
+        Portal
+    ) {
         if (err) {
-            console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("error");
         } else {
-            let updatePortal;
-            updatePortal = {
-                PortalName: req.body.PortalName,
-                Status: req.body.Status
-            };
-            Portal.findByIdAndUpdate(req.body._id, updatePortal, function (
-                err,
-                Portal
-            ) {
-                if (err) {
-                    res.send("error");
-                } else {
-                    res.send(updatePortal);
-                }
-            });
+            res.send(updatePortal);
         }
-
-        console.log("put");
-        console.log(req.body);
     });
-});
-router.delete("/api/admin/portal/:id", verifyAdmin, (req, res) => {
+
+
+    console.log("put");
+    console.log(req.body);
+
+};
+exports.deletePortal = (req, res) => {
     Portal.findByIdAndRemove({ _id: req.params.id }, function (err, portal) {
         if (!err) {
             console.log("portal deleted");
@@ -86,8 +75,6 @@ router.delete("/api/admin/portal/:id", verifyAdmin, (req, res) => {
     });
     console.log("delete");
     console.log(req.params.id);
-});
+};
 
 
-
-module.exports = router;

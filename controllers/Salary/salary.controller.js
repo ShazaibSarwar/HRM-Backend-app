@@ -1,12 +1,9 @@
-const router = require('express').Router();
-const Joi = require('joi')
 const Employee = require('../../models/employee.model')
 const Salary = require('../../models/salary.model')
-const SalaryValidation = require('../../controllers/Salary/salary.validator')
-const verifyHR = require('../../middlewares/verifyHr.middleware')
 
 
-router.get("/api/salary", verifyHR, (req, res) => {
+
+exports.getSalaries = (req, res) => {
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
     Employee.find()
@@ -30,90 +27,76 @@ router.get("/api/salary", verifyHR, (req, res) => {
             // console.log(filteredCompany);
             res.send(filteredCompany);
         });
-});
-router.post("/api/salary/:id", verifyHR, (req, res) => {
-    Joi.validate(req.body, SalaryValidation, (err, result) => {
+};
+exports.addSalary = (req, res) => {
+
+    Employee.findById(req.params.id, function (err, employee) {
         if (err) {
             console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("err");
         } else {
-            Employee.findById(req.params.id, function (err, employee) {
-                if (err) {
-                    console.log(err);
-                    res.send("err");
-                } else {
-                    if (employee.salary.length == 0) {
-                        let newSalary;
+            if (employee.salary.length == 0) {
+                let newSalary;
 
-                        newSalary = {
-                            BasicSalary: req.body.BasicSalary,
-                            BankName: req.body.BankName,
-                            AccountNo: req.body.AccountNo,
-                            AccountHolderName: req.body.AccountHolderName,
-                            IFSCcode: req.body.IFSCcode,
-                            TaxDeduction: req.body.TaxDeduction
-                        };
+                newSalary = {
+                    BasicSalary: req.body.BasicSalary,
+                    BankName: req.body.BankName,
+                    AccountNo: req.body.AccountNo,
+                    AccountHolderName: req.body.AccountHolderName,
+                    TaxDeduction: req.body.TaxDeduction
+                };
 
-                        Salary.create(newSalary, function (err, salary) {
+                Salary.create(newSalary, function (err, salary) {
+                    if (err) {
+                        console.log(err);
+                        res.send("error");
+                    } else {
+                        employee.salary.push(salary);
+                        employee.save(function (err, data) {
                             if (err) {
                                 console.log(err);
-                                res.send("error");
+                                res.send("err");
                             } else {
-                                employee.salary.push(salary);
-                                employee.save(function (err, data) {
-                                    if (err) {
-                                        console.log(err);
-                                        res.send("err");
-                                    } else {
-                                        console.log(data);
-                                        res.send(salary);
-                                    }
-                                });
-                                console.log("new salary Saved");
+                                console.log(data);
+                                res.send(salary);
                             }
                         });
-                        console.log(req.body);
-                    } else {
-                        res
-                            .status(403)
-                            .send("Salary Information about this employee already exits");
+                        console.log("new salary Saved");
                     }
-                }
-            });
+                });
+                console.log(req.body);
+            } else {
+                res
+                    .status(403)
+                    .send("Salary Information about this employee already exits");
+            }
         }
     });
-});
-router.put("/api/salary/:id", verifyHR, (req, res) => {
-    Joi.validate(req.body, SalaryValidation, (err, result) => {
+
+};
+exports.updateSalary = (req, res) => {
+
+    let newSalary;
+
+    newSalary = {
+        BasicSalary: req.body.BasicSalary,
+        BankName: req.body.BankName,
+        AccountNo: req.body.AccountNo,
+        AccountHolderName: req.body.AccountHolderName,
+        TaxDeduction: req.body.TaxDeduction
+    };
+
+    Salary.findByIdAndUpdate(req.params.id, newSalary, function (err, salary) {
         if (err) {
-            console.log(err);
-            res.status(400).send(err.details[0].message);
+            res.send("error");
         } else {
-            let newSalary;
-
-            newSalary = {
-                BasicSalary: req.body.BasicSalary,
-                BankName: req.body.BankName,
-                AccountNo: req.body.AccountNo,
-                AccountHolderName: req.body.AccountHolderName,
-                IFSCcode: req.body.IFSCcode,
-                TaxDeduction: req.body.TaxDeduction
-            };
-
-            Salary.findByIdAndUpdate(req.params.id, newSalary, function (err, salary) {
-                if (err) {
-                    res.send("error");
-                } else {
-                    res.send(newSalary);
-                }
-            });
+            res.send(newSalary);
         }
-
-        console.log("put");
-        console.log(req.body);
     });
-});
-router.delete("/api/salary/:id", verifyHR, (req, res) => {
+
+
+};
+exports.deleteSalary = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         console.log("uuuuuuuunnnnnnnnnnnnnnndef", employee.salary[0]);
         if (err) {
@@ -143,6 +126,5 @@ router.delete("/api/salary/:id", verifyHR, (req, res) => {
             console.log(req.params.id);
         }
     });
-});
+};
 
-module.exports = router;
