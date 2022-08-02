@@ -4,7 +4,7 @@ const Education = require('../../models/education.model')
 
 
 exports.getEducation = (req, res) => {
-    console.log(req.params.id);
+    
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
@@ -61,7 +61,7 @@ exports.addEducation = (req, res) => {
                     console.log("new Education Saved");
                 }
             });
-            console.log(req.body);
+            
         }
     });
 
@@ -91,7 +91,7 @@ exports.updateEducation = (req, res) => {
             });
         }
         console.log("put");
-        console.log(req.body);
+        
     });
 };
 exports.deleteEducation = (req, res) => {
@@ -117,7 +117,7 @@ exports.deleteEducation = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("Delete Education with ID",req.params.id);
         }
     });
 };

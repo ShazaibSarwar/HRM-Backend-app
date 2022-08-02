@@ -40,7 +40,7 @@ exports.addProject = (req, res) => {
             console.log("new project Saved");
         }
     });
-    console.log(req.body);
+    
 
 };
 exports.updateProject = (req, res) => {
@@ -68,7 +68,7 @@ exports.updateProject = (req, res) => {
 
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 exports.deleteProject = (req, res) => {
@@ -82,6 +82,6 @@ exports.deleteProject = (req, res) => {
         }
     });
     console.log("delete");
-    console.log(req.params.id);
+    console.log("Delete Role with ID",req.params.id);
 };
 

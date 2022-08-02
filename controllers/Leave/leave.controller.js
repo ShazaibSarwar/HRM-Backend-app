@@ -4,7 +4,7 @@ const LeaveApplication = require('../../models/leave.model')
 
 
 exports.getLeaves = (req, res) => {
-    console.log(req.params.id);
+    
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
@@ -76,7 +76,7 @@ exports.makeLeave = (req, res) => {
 
 };
 exports.updateLeave = (req, res) => {
-
+console.log('in update leave..............................................')
     let newLeaveApplication;
 
     newLeaveApplication = {
@@ -127,7 +127,7 @@ exports.deleteLeave = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("Delete Leave with ID",req.params.id);
         }
     });
 };
@@ -198,7 +198,7 @@ exports.deleteLeaveHR = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("Delete Leave with ID",req.params.id);
         }
     });
 };

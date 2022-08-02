@@ -27,7 +27,7 @@ exports.createDepartment = (req, res) => {
         }
     });
 
-    console.log(req.body);
+    
 
 };
 exports.updateDepartment = (req, res) => {
@@ -69,7 +69,7 @@ exports.deleteDepartment = (req, res) => {
                     }
                 });
                 console.log("delete");
-                console.log(req.params.id);
+                console.log("Delete Department with ID", req.params.id);
             } else {
                 res
                     .status(403)

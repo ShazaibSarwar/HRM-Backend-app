@@ -30,7 +30,7 @@ exports.addPortal = (req, res) => {
             console.log("new Portal Saved");
         }
     });
-    console.log(req.body);
+    
 
 };
 exports.updatePortal = (req, res) => {
@@ -53,7 +53,7 @@ exports.updatePortal = (req, res) => {
 
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 exports.deletePortal = (req, res) => {
@@ -74,7 +74,7 @@ exports.deletePortal = (req, res) => {
         }
     });
     console.log("delete");
-    console.log(req.params.id);
+    console.log("Delete Portal with ID",req.params.id);
 };
 
 

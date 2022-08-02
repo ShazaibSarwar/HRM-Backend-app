@@ -5,21 +5,13 @@ const WorkExperience = require('../../models/workExperience.model')
 
 
 exports.getWorkExperience = (req, res) => {
-    console.log(req.params.id);
+   
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
         // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
         .populate({
             path: "workExperience"
-            // populate: {
-            //   path: "state",
-            //   model: "State",
-            //   populate: {
-            //     path: "country",
-            //     model: "Country"
-            //   }
-            // }
         })
         // .select(" -role -position -department")
         .select("FirstName LastName MiddleName")
@@ -62,7 +54,7 @@ exports.addWorkExperience = (req, res) => {
                     console.log("new WorkExperience Saved");
                 }
             });
-            console.log(req.body);
+            
         }
     });
 
@@ -93,7 +85,7 @@ exports.updateWorkExperience = (req, res) => {
     );
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 exports.deleteEorkExperience = (req, res) => {
@@ -122,7 +114,7 @@ exports.deleteEorkExperience = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("delete work experience with id", req.params.id);
         }
     });
 };

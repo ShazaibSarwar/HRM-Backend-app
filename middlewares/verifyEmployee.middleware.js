@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const jwtKey = process.env.JWTKEY;
 
 module.exports = (req, res, next) => {
-  console.log(req.headers["authorization"]);
+  
   const Header = req.headers["authorization"];
 
   if (typeof Header !== "undefined") {
@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
         res.sendStatus(403);
       } else {
         if (authData._id == req.params.id) {
-          console.log(authData);
+          
           if (authData.Account == 3) {
             next();
           } else {

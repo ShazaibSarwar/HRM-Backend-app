@@ -44,7 +44,7 @@ exports.createCompany = (req, res) => {
             console.log("new company Saved with data");
         }
     });
-    console.log(req.body);
+    
 };
 
 exports.updateCompany = (req, res) => {
@@ -69,6 +69,6 @@ exports.updateCompany = (req, res) => {
         res.send(newCompany);
     });
     console.log("put");
-    console.log(req.body);
+    
 };
 

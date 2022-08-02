@@ -55,7 +55,7 @@ exports.addEmployee = (req, res) => {
             console.log("new employee Saved");
         }
     });
-    console.log(req.body);
+    
 
 };
 exports.updateEmployee = (req, res) => {
@@ -89,7 +89,7 @@ exports.updateEmployee = (req, res) => {
 
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 exports.deleteEmployee = (req, res) => {
@@ -104,7 +104,7 @@ exports.deleteEmployee = (req, res) => {
     });
     res.send("error");
     console.log("delete");
-    console.log(req.params.id);
+    console.log("Delete Employee with ID",req.params.id);
 };
 
 exports.getPersonalInfo = (req, res) => {
@@ -157,7 +157,7 @@ exports.updatePersonalInfo = (req, res) => {
 
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 

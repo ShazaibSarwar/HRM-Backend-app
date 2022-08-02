@@ -11,7 +11,7 @@ exports.getRole = (req, res) => {
         });
 };
 exports.addRole = (req, res) => {
-    console.log(req.body);
+   
     let newRole;
 
     newRole = {
@@ -51,7 +51,7 @@ exports.updateRole = (req, res) => {
 
 
     console.log("put");
-    console.log(req.body);
+    
 
 };
 exports.deleteRole = (req, res) => {
@@ -71,7 +71,7 @@ exports.deleteRole = (req, res) => {
                     }
                 });
                 console.log("delete");
-                console.log(req.params.id);
+                console.log("Delete Role with ID",req.params.id);
             } else {
                 res
                     .status(403)

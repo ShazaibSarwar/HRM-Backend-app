@@ -28,7 +28,7 @@ exports.addPosition = (req, res) => {
         }
     });
 
-    console.log(req.body);
+    
 
 };
 exports.updatePosition = (req, res) => {
@@ -74,7 +74,7 @@ exports.deletePosition = (req, res) => {
                     }
                 });
                 console.log("delete");
-                console.log(req.params.id);
+                console.log("Delete Position with ID", req.params.id);
             } else {
                 res
                     .status(403)

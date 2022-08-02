@@ -64,7 +64,7 @@ exports.addSalary = (req, res) => {
                         console.log("new salary Saved");
                     }
                 });
-                console.log(req.body);
+                
             } else {
                 res
                     .status(403)
@@ -123,7 +123,7 @@ exports.deleteSalary = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("Delete salary with id ",req.params.id);
         }
     });
 };

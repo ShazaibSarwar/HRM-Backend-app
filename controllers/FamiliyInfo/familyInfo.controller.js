@@ -3,7 +3,7 @@ const FamilyInfo = require('../../models/familyInfo.model')
 
 
 exports.getInfo = (req, res) => {
-    console.log(req.params.id);
+   
     // var employee = {};
     // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
@@ -60,7 +60,7 @@ exports.addInfo = (req, res) => {
                     console.log("new familyInfo Saved");
                 }
             });
-            console.log(req.body);
+            
         }
     });
 
@@ -114,7 +114,7 @@ exports.deleteInfo = (req, res) => {
                 }
             });
             console.log("delete");
-            console.log(req.params.id);
+            console.log("Delete Family Info with ID",req.params.id);
         }
     });
 };
