@@ -1,31 +1,17 @@
 const Employee = require('../../models/employee.model')
 const FamilyInfo = require('../../models/familyInfo.model')
 
-
+// Get Emergency Contacts from Employee's Details
 exports.getInfo = (req, res) => {
-   
-    // var employee = {};
-    // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "familyInfo"
-            // populate: {
-            //   path: "state",
-            //   model: "State",
-            //   populate: {
-            //     path: "country",
-            //     model: "Country"
-            //   }
-            // }
-        })
-        // .select(" -role -position -department")
+        .populate({ path: "familyInfo" })
         .select("FirstName LastName MiddleName")
         .exec(function (err, employee) {
-            // console.log(filteredCompany);
             res.send(employee);
         });
 };
+
+// Add Emergency Contact Info and also pushing it Employees details 
 exports.addInfo = (req, res) => {
 
     Employee.findById(req.params.id, function (err, employee) {
@@ -60,11 +46,13 @@ exports.addInfo = (req, res) => {
                     console.log("new familyInfo Saved");
                 }
             });
-            
+
         }
     });
 
 };
+
+// Update Emergency Contact Details with ID
 exports.updateInfo = (req, res) => {
 
     let newFamilyInfo;
@@ -80,41 +68,31 @@ exports.updateInfo = (req, res) => {
         err,
         familyInfo
     ) {
-        if (err) {
-            res.send("error");
-        } else {
-            res.send(newFamilyInfo);
-        }
+        if (err) res.send("error");
+        res.send(newFamilyInfo); // Else send Updated info 
     });
 
 };
+
+// Delete emergency contact info and deleting and updating emergency contact info from Employee's details as well
 exports.deleteInfo = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
             res.send("error");
             console.log(err);
         } else {
-            FamilyInfo.findByIdAndRemove({ _id: req.params.id2 }, function (
-                err,
-                familyInfo
-            ) {
+            FamilyInfo.findByIdAndRemove({ _id: req.params.id2 }, function (err, familyInfo) {
                 if (!err) {
                     console.log("FamilyInfo deleted");
-                    Employee.update(
-                        { _id: req.params.id },
-                        { $pull: { familyInfo: req.params.id2 } },
-                        function (err, numberAffected) {
-                            console.log(numberAffected);
-                            res.send(familyInfo);
-                        }
-                    );
+                    Employee.findByIdAndUpdate({ _id: req.params.id }, { $pull: { familyInfo: req.params.id2 } }, function (err, numberAffected) {
+                        console.log(numberAffected);
+                        res.send(familyInfo);
+                    });
                 } else {
                     console.log(err);
                     res.send("error");
                 }
             });
-            console.log("delete");
-            console.log("Delete Family Info with ID",req.params.id);
         }
     });
 };

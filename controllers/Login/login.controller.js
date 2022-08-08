@@ -6,8 +6,7 @@ exports.login = (req, res) => {
 
     console.log('Login is hitted')
 
-    Employee.findOne(
-        { Email: req.body.email },
+    Employee.findOne({ Email: req.body.email },
         "Password _id Account FirstName LastName",
         function (err, document) {
             if (err || document == null) {

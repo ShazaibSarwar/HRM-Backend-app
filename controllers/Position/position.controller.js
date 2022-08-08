@@ -1,8 +1,7 @@
 const Position = require('../../models/position.model')
 const Employee = require('../../models/employee.model')
 
-// const verifyAdminHR = require('../../middlewares/verifyAdmin.middleware')
-
+// GET all Positions 
 exports.getPositions = (req, res) => {
     Position.find()
         .populate("company")
@@ -10,6 +9,8 @@ exports.getPositions = (req, res) => {
             res.send(role);
         });
 };
+
+// Add New Position
 exports.addPosition = (req, res) => {
 
     let newPosition;
@@ -27,31 +28,28 @@ exports.addPosition = (req, res) => {
             console.log("new Role Saved");
         }
     });
-
-    
-
 };
+
+// Update Position
 exports.updatePosition = (req, res) => {
 
-            let updatePosition;
+    let updatePosition;
 
-            updatePosition = {
-                PositionName: req.body.PositionName,
-                company: req.body.CompanyID
-            };
+    updatePosition = {
+        PositionName: req.body.PositionName,
+        company: req.body.CompanyID
+    };
 
-            Position.findByIdAndUpdate(req.params.id, updatePosition, function (
-                err,
-                position
-            ) {
-                if (err) {
-                    res.send("error");
-                } else {
-                    res.send(updatePosition);
-                }
-            });
-    
+    Position.findByIdAndUpdate(req.params.id, updatePosition, function (err, position) {
+        if (err) {
+            res.send("error");
+        } else {
+            res.send(updatePosition);
+        }
+    });
 };
+
+// Delete Position
 exports.deletePosition = (req, res) => {
     Employee.find({ position: req.params.id }, function (err, p) {
         if (err) {
@@ -64,23 +62,16 @@ exports.deletePosition = (req, res) => {
                     position
                 ) {
                     if (!err) {
-                        console.log("position deleted");
                         res.send(position);
 
                         console.log("new Position Saved");
                     } else {
-                        console.log("error");
                         res.send("err");
                     }
                 });
-                console.log("delete");
-                console.log("Delete Position with ID", req.params.id);
+
             } else {
-                res
-                    .status(403)
-                    .send(
-                        "This Position is associated with Employee so you can not delete this"
-                    );
+                res.status(403).send("This Position is associated with Employee so you can not delete this");
             }
         }
     });

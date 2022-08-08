@@ -20,5 +20,6 @@ entitySchema.pre('save', function (next) {
     });
 });
 
+
 const FamilyInfo = mongoose.model("FamilyInfo", familyInfoSchema);
 module.exports = FamilyInfo

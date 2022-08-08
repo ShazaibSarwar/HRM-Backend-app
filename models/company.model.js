@@ -14,24 +14,7 @@ const  companySchema = new mongoose.Schema({
     Deleted: { type: Boolean }
   });
 
-  const Company = mongoose.model("Company", companySchema);
-  module.exports = Company
-
-  // companySchema.plugin(autoIncrement.plugin, {
-  //   model: "Company",
-  //   field: "CompanyID"
-  // });
-
-  // autoIncrement.initialize(mongoose.connection); // This is important. You can remove initialization in different file
-
-  // companySchema.plugin(autoIncrement.plugin, {
-  //   model: 'Company',
-  //   field: 'CompanyID',
-  //   startAt: 1,
-  //   incrementBy: 1
-  // });
-
-var entitySchema = mongoose.Schema({
+  var entitySchema = mongoose.Schema({
     CompanyID: {type: String}
 });
 
@@ -43,3 +26,8 @@ entitySchema.pre('save', function(next) {
         next();
     });
 });
+
+  const Company = mongoose.model("Company", companySchema);
+  module.exports = Company
+
+

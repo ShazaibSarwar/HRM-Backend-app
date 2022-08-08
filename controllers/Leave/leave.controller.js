@@ -1,37 +1,18 @@
 const Employee = require('../../models/employee.model')
 const LeaveApplication = require('../../models/leave.model')
 
-
-
+//  GET all Leave associatated with particular employees
 exports.getLeaves = (req, res) => {
-    
-    // var employee = {};
-    // {path: 'projects', populate: {path: 'portals'}}
     Employee.findById(req.params.id)
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "leaveApplication"
-            // populate: {
-            //   path: "state",
-            //   model: "State",
-            //   populate: {
-            //     path: "country",
-            //     model: "Country"
-            //   }
-            // }
-        })
-        // .select(" -role -position -department")
+        .populate({ path: "leaveApplication" })
         .select("FirstName LastName MiddleName")
         .exec(function (err, employee) {
-            // console.log(filteredCompany);
-            if (err) {
-                console.log(err);
-                res.send("error");
-            } else {
-                res.send(employee);
-            }
+            if (err) res.send("error");
+            res.send(employee);
         });
 };
+
+// Creating a new leave and adding it to employee details
 exports.makeLeave = (req, res) => {
 
     Employee.findById(req.params.id, function (err, employee) {
@@ -49,10 +30,7 @@ exports.makeLeave = (req, res) => {
                 employee: req.params.id
             };
 
-            LeaveApplication.create(newLeaveApplication, function (
-                err,
-                leaveApplication
-            ) {
+            LeaveApplication.create(newLeaveApplication, function (err, leaveApplication) {
                 if (err) {
                     console.log(err);
                     res.send("error");
@@ -67,19 +45,16 @@ exports.makeLeave = (req, res) => {
                             res.send(leaveApplication);
                         }
                     });
-                    console.log("new leaveApplication Saved");
                 }
             });
-            
+
         }
     });
-
 };
-exports.updateLeave = (req, res) => {
-console.log('in update leave..............................................')
-    let newLeaveApplication;
 
-    newLeaveApplication = {
+// Updating leave by ID
+exports.updateLeave = (req, res) => {
+    let newLeaveApplication = {
         Leavetype: req.body.Leavetype,
         FromDate: req.body.FromDate,
         ToDate: req.body.ToDate,
@@ -88,19 +63,17 @@ console.log('in update leave..............................................')
         employee: req.params.id
     };
 
-    LeaveApplication.findByIdAndUpdate(
-        req.params.id,
-        newLeaveApplication,
-        function (err, leaveApplication) {
-            if (err) {
-                res.send("error");
-            } else {
-                res.send(newLeaveApplication);
-            }
+    LeaveApplication.findByIdAndUpdate(req.params.id, newLeaveApplication, function (err, leaveApplication) {
+        if (err) {
+            res.send("error");
+        } else {
+            res.send(leaveApplication);
         }
+    }
     );
-
 };
+
+// Delete leave 
 exports.deleteLeave = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
@@ -112,93 +85,59 @@ exports.deleteLeave = (req, res) => {
                 leaveApplication
             ) {
                 if (!err) {
-                    console.log("LeaveApplication deleted");
-                    Employee.update(
-                        { _id: req.params.id },
-                        { $pull: { leaveApplication: req.params.id2 } },
-                        function (err, numberAffected) {
-                            console.log(numberAffected);
-                            res.send(leaveApplication);
-                        }
+                    Employee.findByIdAndUpdate({ _id: req.params.id }, { $pull: { leaveApplication: req.params.id2 } }, function (err, numberAffected) {
+                        console.log(numberAffected);
+                        res.send(leaveApplication);
+                    }
                     );
                 } else {
                     console.log(err);
                     res.send("error");
                 }
             });
-            console.log("delete");
-            console.log("Delete Leave with ID",req.params.id);
         }
     });
 };
 
 exports.getLeavesHR = (req, res) => {
-    // var employee = {};
-    // {path: 'projects', populate: {path: 'portals'}}
     LeaveApplication.find()
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
         .populate({
             path: "employee"
         })
-        // .select(" -role -position -department")
-        // .select("FirstName LastName MiddleName"
-        // )
         .exec(function (err, leaveApplication) {
-            // console.log(filteredCompany);
-            if (err) {
-                console.log(err);
-                res.send("error");
-            } else {
-                res.send(leaveApplication);
-            }
+            if (err) res.send("error");
+            res.send(leaveApplication);
+
         });
 };
+
+// Approve Leave By HR
 exports.updateLeaveHR = (req, res) => {
-
-    let newLeaveApplication;
-
-    newLeaveApplication = {
+    let newLeaveApplication = {
         Status: req.body.Status
     };
-    LeaveApplication.findByIdAndUpdate(
-        req.params.id,
-        {
-            $set: newLeaveApplication
-        },
-        function (err, numberAffected) {
-            console.log(numberAffected);
-            res.send(newLeaveApplication);
-        }
-    );
-
+    LeaveApplication.findByIdAndUpdate(req.params.id, { $set: newLeaveApplication }, function (err, numberAffected) {
+        res.send(newLeaveApplication);
+    });
 };
+
+// Leave form HR dashboard
 exports.deleteLeaveHR = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
         if (err) {
             res.send("error");
             console.log(err);
         } else {
-            LeaveApplication.findByIdAndRemove({ _id: req.params.id2 }, function (
-                err,
-                leaveApplication
-            ) {
+            LeaveApplication.findByIdAndRemove({ _id: req.params.id2 }, function (err, leaveApplication) {
                 if (!err) {
-                    console.log("LeaveApplication deleted");
-                    Employee.update(
-                        { _id: req.params.id },
-                        { $pull: { leaveApplication: req.params.id2 } },
-                        function (err, numberAffected) {
-                            console.log(numberAffected);
-                            res.send(leaveApplication);
-                        }
-                    );
+                    Employee.findByIdAndUpdate({ _id: req.params.id }, { $pull: { leaveApplication: req.params.id2 } }, function (err, numberAffected) {
+                        res.send(leaveApplication);
+                    });
                 } else {
                     console.log(err);
                     res.send("error");
                 }
             });
-            console.log("delete");
-            console.log("Delete Leave with ID",req.params.id);
         }
     });
 };

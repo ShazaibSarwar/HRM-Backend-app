@@ -1,7 +1,8 @@
+// importing Core packeges
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
-
+// requiring all Routes to mount with server
 const loginRoute = require('./routes/loginRoute')
 const roleRoute = require('./routes/role.route')
 const leaveRoute = require('./routes/leave.route')
@@ -18,6 +19,7 @@ const workExperienceRoute = require('./routes/workExperience.route')
 
 //  Start express app
 const app = express();
+// For Cross Origin Resource Sharing
 app.use(cors())
 
 //  Body parser, reading data from body into req.body
@@ -42,7 +44,9 @@ app.use('/api/experience', workExperienceRoute)
 module.exports = app;
 
 
-// '/api/role'
+// '/api/role/'          // get All Roles
+// '/api/role/'         // Post a Role
+// '/api/role/:id'      // Post a Role
 // '/api/leave/emp'
 // '/api/leave/hr'
 // '/api/login'

@@ -7,10 +7,6 @@ const educationSchema = new mongoose.Schema({
     PassingOfYear: { type: String, required: true }
   });
   
-  // educationSchema.plugin(autoIncrement.plugin, {
-  //   model: "Education",
-  //   field: "EducationID"
-  // });
 
   var entitySchema = mongoose.Schema({
     EducationID: {type: String}
@@ -25,7 +21,5 @@ entitySchema.pre('save', function(next) {
     });
 });
   
-  const Education = mongoose.model("Education", educationSchema);
-
-  module.exports =  Education
-  
+const Education = mongoose.model("Education", educationSchema);
+module.exports =  Education

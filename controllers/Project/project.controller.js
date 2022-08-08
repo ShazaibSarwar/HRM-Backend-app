@@ -1,22 +1,16 @@
-
-// const verifyAdmin = require('../../middlewares/verifyAdmin.middleware')
 const Project = require('../../models/project.model')
 
-
+// Get All Projects 
 exports.getProjects = (req, res) => {
-    // var employee = {};
-
     Project.find()
         .populate("portals")
         .exec(function (err, project) {
-            if (err) {
-                console.log(err);
-                res.send("err");
-            } else {
-                res.send(project);
-            }
+            if (err) res.send("err");
+            res.send(project);
         });
 };
+
+// Add a new Project 
 exports.addProject = (req, res) => {
 
     let project;
@@ -40,9 +34,9 @@ exports.addProject = (req, res) => {
             console.log("new project Saved");
         }
     });
-    
-
 };
+
+// Update Project
 exports.updateProject = (req, res) => {
 
     let updateProject;
@@ -58,19 +52,16 @@ exports.updateProject = (req, res) => {
         Remark: req.body.Remark
     };
 
-    Project.findByIdAndUpdate(req.params.id, updateProject, function ( err,Project) {
+    Project.findByIdAndUpdate(req.params.id, updateProject, function (err, Project) {
         if (err) {
             res.send("error");
         } else {
             res.send(updateProject);
         }
     });
-
-
-    console.log("put");
-    
-
 };
+
+// Delete Project 
 exports.deleteProject = (req, res) => {
     Project.findByIdAndRemove({ _id: req.params.id }, function (err, project) {
         if (err) {
@@ -81,7 +72,5 @@ exports.deleteProject = (req, res) => {
             res.send(project);
         }
     });
-    console.log("delete");
-    console.log("Delete Role with ID",req.params.id);
 };
 

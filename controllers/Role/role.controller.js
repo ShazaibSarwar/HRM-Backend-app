@@ -1,8 +1,6 @@
 const Role = require('../../models/role.model')
 
-// const verifyAdminHR = require('../../middlewares/verifyAdminHR.middleware')
-
-
+// Get all Roles
 exports.getRole = (req, res) => {
     Role.find()
         .populate("company")
@@ -10,11 +8,11 @@ exports.getRole = (req, res) => {
             res.send(role);
         });
 };
-exports.addRole = (req, res) => {
-   
-    let newRole;
 
-    newRole = {
+// Add A new Role 
+exports.addRole = (req, res) => {
+
+    let newRole = {
         RoleName: req.body.RoleName,
         company: req.body.CompanyID
     };
@@ -28,15 +26,10 @@ exports.addRole = (req, res) => {
             console.log("new Role Saved");
         }
     });
-
-    
-
 };
 exports.updateRole = (req, res) => {
 
-    let updateRole;
-
-    updateRole = {
+    let updateRole = {
         RoleName: req.body.RoleName,
         company: req.body.CompanyID
     };
@@ -48,12 +41,9 @@ exports.updateRole = (req, res) => {
             res.send(updateRole);
         }
     });
-
-
-    console.log("put");
-    
-
 };
+
+// Delete a Role if it not associated with any Employee
 exports.deleteRole = (req, res) => {
     Employee.find({ role: req.params.id }, function (err, r) {
         if (err) {
@@ -62,20 +52,11 @@ exports.deleteRole = (req, res) => {
         } else {
             if (r.length == 0) {
                 Role.findByIdAndRemove({ _id: req.params.id }, function (err, role) {
-                    if (!err) {
-                        console.log(" Role deleted");
-                        res.send(role);
-                    } else {
-                        console.log("error");
-                        res.send("err");
-                    }
+                    if (!err) res.send(role);
+                    res.send("err");
                 });
-                console.log("delete");
-                console.log("Delete Role with ID",req.params.id);
             } else {
-                res
-                    .status(403)
-                    .send("This role is associated with Employee so you can not delete this");
+                res.status(403).send("This role is associated with Employee so you can not delete this");
             }
         }
     });

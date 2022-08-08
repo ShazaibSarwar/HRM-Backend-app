@@ -1,28 +1,17 @@
 const Employee = require('../../models/employee.model')
 
-
+// GET all Employees From Database
 exports.getEmployees = (req, res) => {
 
-    console.log('In GET EMP ..............................................')
-    // {path: 'projects', populate: {path: 'portals'}}
     Employee.find()
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "role position department"
-            // populate: {
-            //   path: "state",
-            //   model: "State",
-            //   populate: {
-            //     path: "country",
-            //     model: "Country"
-            //   }
-            // }
-        })
+        .populate({path: "role position department"})
         .select("-salary -education -familyInfo -workExperience -Password")
         .exec(function (err, employee) {
             res.send(employee);
         });
 };
+
+// Add a new Employee in Database
 exports.addEmployee = (req, res) => {
 
     let newEmployee;
@@ -58,6 +47,8 @@ exports.addEmployee = (req, res) => {
     
 
 };
+
+// Update Employee by ID
 exports.updateEmployee = (req, res) => {
 
     let newEmployee;
@@ -86,48 +77,29 @@ exports.updateEmployee = (req, res) => {
             res.send(newEmployee);
         }
     });
-
-
-    console.log("put");
-    
-
 };
+
+// Delete Employee by id
 exports.deleteEmployee = (req, res) => {
     Employee.findByIdAndRemove({ _id: req.params.id }, function (err, employee) {
-      if (!err) {
-        console.log(" state deleted");
-        res.send(employee);
-      } else {
-        console.log(err);
-        res.send("error");
-      }
+      if (!err) res.send(employee);
+      res.send("error");
     });
-    res.send("error");
-    console.log("delete");
-    console.log("Delete Employee with ID",req.params.id);
+    // res.send("error");
 };
 
+// Personal Info of a particular Employee
 exports.getPersonalInfo = (req, res) => {
-    console.log("personal-info", req.params.id);
+    
     Employee.findById(req.params.id)
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "role position department"
-            //   // populate: {
-            //   //   path: "state",
-            //   //   model: "State",
-            //   //   populate: {
-            //   //     path: "country",
-            //   //     model: "Country"
-            //   //   }
-            //   // }
-        })
+        .populate({path: "role position department"})
         .select("-salary -education -familyInfo -workExperience")
         .exec(function (err, employee) {
-            // employee = employees;
             res.send(employee);
         });
 };
+
+// Update Personal Info By Employee ID
 exports.updatePersonalInfo = (req, res) => {
 
     let newEmployee;
@@ -144,21 +116,11 @@ exports.updatePersonalInfo = (req, res) => {
         PermanetAddress: req.body.PermanetAddress,
         PresentAddress: req.body.PresentAddress
     };
-    Employee.findByIdAndUpdate(
-        req.params.id,
-        {
-            $set: newEmployee
-        },
-        function (err, numberAffected) {
-            console.log(numberAffected);
+    Employee.findByIdAndUpdate(req.params.id,{$set: newEmployee }, function (err, numberAffected) {
+            console.log("Number of Rows Affected",numberAffected);
             res.send(newEmployee);
         }
     );
-
-
-    console.log("put");
-    
-
 };
 
 

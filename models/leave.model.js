@@ -23,6 +23,5 @@ entitySchema.pre('save', function (next) {
   });
 });
 
-
 var LeaveApplication = mongoose.model("LeaveApplication", leaveApplicationSchema);
 module.exports = LeaveApplication

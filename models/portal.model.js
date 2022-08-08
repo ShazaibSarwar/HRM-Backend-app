@@ -8,15 +8,15 @@ const portalSchema = new mongoose.Schema({
     ModifiedDate: { type: Date },
     PortalName: { type: String, required: true },
     Status: { type: Number, required: true }
-  });
-  var entitySchema = mongoose.Schema({
-    ID: {type: String}
+});
+var entitySchema = mongoose.Schema({
+    ID: { type: String }
 });
 
-entitySchema.pre('save', function(next) {
+entitySchema.pre('save', function (next) {
     var doc = this;
-    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
-        if(error) return next(error);
+    counter.findByIdAndUpdate({ _id: 'entityId' }, { $inc: { seq: 1 } }, function (error, counter) {
+        if (error) return next(error);
         doc.ID = counter.seq;
         next();
     });

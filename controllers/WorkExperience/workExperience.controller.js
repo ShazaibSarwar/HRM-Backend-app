@@ -1,35 +1,25 @@
-
 const Employee = require('../../models/employee.model')
 const WorkExperience = require('../../models/workExperience.model')
 
-
-
+// Get Work Experience of psrticular Employee
 exports.getWorkExperience = (req, res) => {
-   
-    // var employee = {};
-    // {path: 'projects', populate: {path: 'portals'}}
+
     Employee.findById(req.params.id)
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "workExperience"
-        })
-        // .select(" -role -position -department")
+        .populate({path: "workExperience"})
         .select("FirstName LastName MiddleName")
         .exec(function (err, employee) {
             res.send(employee);
         });
 };
+
+// Add Work Experience of particular employee 
 exports.addWorkExperience = (req, res) => {
-
-
     Employee.findById(req.params.id, function (err, employee) {
         if (err) {
             console.log(err);
             res.send("err");
         } else {
-            let newWorkExperience;
-
-            newWorkExperience = {
+            let newWorkExperience = {
                 CompanyName: req.body.CompanyName,
                 Designation: req.body.Designation,
                 FromDate: req.body.FromDate,
@@ -51,31 +41,25 @@ exports.addWorkExperience = (req, res) => {
                             res.send(workExperience);
                         }
                     });
-                    console.log("new WorkExperience Saved");
                 }
             });
             
         }
     });
-
-
 };
+
+//  Update Work Experience  
 exports.updateWorkExperience = (req, res) => {
 
 
-    let newWorkExperience;
-
-    newWorkExperience = {
+    let newWorkExperience = {
         CompanyName: req.body.CompanyName,
         Designation: req.body.Designation,
         FromDate: req.body.FromDate,
         ToDate: req.body.ToDate
     };
 
-    WorkExperience.findByIdAndUpdate(
-        req.params.id,
-        newWorkExperience,
-        function (err, workExperience) {
+    WorkExperience.findByIdAndUpdate( req.params.id, newWorkExperience, function (err, workExperience) {
             if (err) {
                 res.send("error");
             } else {
@@ -100,7 +84,7 @@ exports.deleteEorkExperience = (req, res) => {
             ) {
                 if (!err) {
                     console.log("WorkExperience deleted");
-                    Employee.update(
+                    Employee.findByIdAndUpdate(
                         { _id: req.params.id },
                         { $pull: { workExperience: req.params.id2 } },
                         function (err, numberAffected) {
@@ -113,8 +97,6 @@ exports.deleteEorkExperience = (req, res) => {
                     res.send("error");
                 }
             });
-            console.log("delete");
-            console.log("delete work experience with id", req.params.id);
         }
     });
 };

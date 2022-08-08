@@ -4,10 +4,6 @@ const departmentSchema = new mongoose.Schema({
     DepartmentName: { type: String, required: true },
     company: [{ type: mongoose.Schema.Types.ObjectId, ref: "Company" }]
   });
-  // departmentSchema.plugin(autoIncrement.plugin, {
-  //   model: "Department",
-  //   field: "DepartmentID"
-  // });
 
   var entitySchema = mongoose.Schema({
     DepartmentID: {type: String}

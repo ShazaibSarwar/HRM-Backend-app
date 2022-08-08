@@ -1,7 +1,6 @@
-
 const Portal = require('../../models/portal.model')
-// const verifyAdmin = require('../../middlewares/verifyAdmin.middleware')
 
+// Get All Portals
 exports.getPortals = (req, res) => {
     Portal.find()
         .populate({ path: "projects" })
@@ -13,6 +12,8 @@ exports.getPortals = (req, res) => {
             res.send(portalData);
         });
 };
+
+// Add A New Portal
 exports.addPortal = (req, res) => {
 
     let newPortal;
@@ -31,8 +32,9 @@ exports.addPortal = (req, res) => {
         }
     });
     
-
 };
+
+// Update Portal  By ID
 exports.updatePortal = (req, res) => {
 
     let updatePortal;
@@ -40,26 +42,19 @@ exports.updatePortal = (req, res) => {
         PortalName: req.body.PortalName,
         Status: req.body.Status
     };
-    Portal.findByIdAndUpdate(req.body._id, updatePortal, function (
-        err,
-        Portal
-    ) {
+    Portal.findByIdAndUpdate(req.body._id, updatePortal, function (err,Portal) {
         if (err) {
             res.send("error");
         } else {
             res.send(updatePortal);
         }
     });
-
-
-    console.log("put");
-    
-
 };
+
+// Delete a Portal By ID
 exports.deletePortal = (req, res) => {
     Portal.findByIdAndRemove({ _id: req.params.id }, function (err, portal) {
         if (!err) {
-            console.log("portal deleted");
             res.send(portal);
             Project.deleteMany({ portals: { _id: portal._id } }, function (err) {
                 if (err) {
@@ -67,14 +62,11 @@ exports.deletePortal = (req, res) => {
                     console.log(err);
                 }
             });
-            console.log("new Portal Saved");
         } else {
             console.log("error");
             res.send("err");
         }
     });
-    console.log("delete");
-    console.log("Delete Portal with ID",req.params.id);
 };
 
 

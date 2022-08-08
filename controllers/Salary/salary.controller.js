@@ -1,33 +1,20 @@
 const Employee = require('../../models/employee.model')
 const Salary = require('../../models/salary.model')
 
-
-
+// Get All Salaries
 exports.getSalaries = (req, res) => {
-    // var employee = {};
-    // {path: 'projects', populate: {path: 'portals'}}
+
     Employee.find()
-        // .populate({ path: "city", populate: { path: "state" } ,populate: { populate: { path: "country" } } })
-        .populate({
-            path: "salary"
-            // populate: {
-            //   path: "state",
-            //   model: "State",
-            //   populate: {
-            //     path: "country",
-            //     model: "Country"
-            //   }
-            // }
-        })
-        // .select(" -role -position -department")
+        .populate({path: "salary" })
         .select("FirstName LastName MiddleName")
         .exec(function (err, company) {
-            // employee = employees;
             let filteredCompany = company.filter(data => data["salary"].length == 1);
             // console.log(filteredCompany);
             res.send(filteredCompany);
         });
 };
+
+// Add a salry of paticular employee
 exports.addSalary = (req, res) => {
 
     Employee.findById(req.params.id, function (err, employee) {
@@ -36,9 +23,7 @@ exports.addSalary = (req, res) => {
             res.send("err");
         } else {
             if (employee.salary.length == 0) {
-                let newSalary;
-
-                newSalary = {
+                let newSalary = {
                     BasicSalary: req.body.BasicSalary,
                     BankName: req.body.BankName,
                     AccountNo: req.body.AccountNo,
@@ -61,24 +46,22 @@ exports.addSalary = (req, res) => {
                                 res.send(salary);
                             }
                         });
-                        console.log("new salary Saved");
+                        
                     }
                 });
                 
             } else {
-                res
-                    .status(403)
-                    .send("Salary Information about this employee already exits");
+                res.status(403).send("Salary Information about this employee already exits");
             }
         }
     });
 
 };
+
+// Update salary 
 exports.updateSalary = (req, res) => {
 
-    let newSalary;
-
-    newSalary = {
+    let newSalary = {
         BasicSalary: req.body.BasicSalary,
         BankName: req.body.BankName,
         AccountNo: req.body.AccountNo,
@@ -93,23 +76,20 @@ exports.updateSalary = (req, res) => {
             res.send(newSalary);
         }
     });
-
-
 };
+
+// Delete Salary 
 exports.deleteSalary = (req, res) => {
     Employee.findById({ _id: req.params.id }, function (err, employee) {
-        console.log("uuuuuuuunnnnnnnnnnnnnnndef", employee.salary[0]);
+
         if (err) {
             res.send("error");
             console.log(err);
         } else {
-            Salary.findByIdAndRemove({ _id: employee.salary[0] }, function (
-                err,
-                salary
-            ) {
+            Salary.findByIdAndRemove({ _id: employee.salary[0] }, function (err,salary) {
                 if (!err) {
                     console.log("salary deleted");
-                    Employee.update(
+                    Employee.findByIdAndUpdate(
                         { _id: req.params.id },
                         { $pull: { salary: employee.salary[0] } },
                         function (err, numberAffected) {
@@ -122,8 +102,6 @@ exports.deleteSalary = (req, res) => {
                     res.send("error");
                 }
             });
-            console.log("delete");
-            console.log("Delete salary with id ",req.params.id);
         }
     });
 };

@@ -5,7 +5,15 @@ const verifyAdminHR = require('../middlewares/verifyAdminHR.middleware')
 
 const router = express.Router()
 
-// router.post('/', companyController.createCompany)
+
+/**
+ * company Routes to 
+ * GET all companies 
+ * Add New Company
+ * Update Company
+ * 
+ * with middlware only Restricted to Admin and HR
+ */
 
 router
     .route('/')

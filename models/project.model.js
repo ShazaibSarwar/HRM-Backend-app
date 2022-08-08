@@ -15,29 +15,22 @@ const projectSchema = new mongoose.Schema({
     Remark: { type: String },
     ResourceID: { type: Number },
     Status: { type: Number, required: true },
-    /////////////****************** */
-    // PortalName: { type: String },
-    // Portals: 2
-    /////////////****************** */
-    portals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Portal" }]
-  });
-  // projectSchema.plugin(autoIncrement.plugin, {
-  //   model: "Project",
-  //   field: "ID"
-  // });
 
-  var entitySchema = mongoose.Schema({
-    ID: {type: String}
+    portals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Portal" }]
 });
 
-entitySchema.pre('save', function(next) {
+var entitySchema = mongoose.Schema({
+    ID: { type: String }
+});
+
+entitySchema.pre('save', function (next) {
     var doc = this;
-    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
-        if(error) return next(error);
+    counter.findByIdAndUpdate({ _id: 'entityId' }, { $inc: { seq: 1 } }, function (error, counter) {
+        if (error) return next(error);
         doc.ID = counter.seq;
         next();
     });
 });
-  
+
 const Project = mongoose.model("Project", projectSchema);
 module.exports = Project
