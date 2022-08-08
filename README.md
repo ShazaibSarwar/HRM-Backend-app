@@ -1,5 +1,4 @@
 -------------
--------------
 
 # HRM (Human Resource Management system)
 Human Resource Management system is a web application that enables users to create, store and manage Employee Records
@@ -8,8 +7,8 @@ Human Resource Management system is a web application that enables users to crea
 
 This is Back-end Repo.
 You can find its front-end Repo Here 👉 : https://github.com/MuhammadNadeem/HRM-Frontend
--------------
--------------
+
+
 
 This web application contains three account access:
 ```
@@ -19,7 +18,6 @@ This web application contains three account access:
 ```
 All three accounts contain different privileges and authentication.
 
--------------
 
 Technology used :
 ```
@@ -28,7 +26,7 @@ Technology used :
 - EXPRESS
 - MONGO DB
 ```
--------------
+
 
 
 The different part or module of this project is as follows:
